@@ -14,11 +14,7 @@ This is in a very early stage and is not suitable for production usage yet.
 
 Here's a list of known bugs:
 
-- An application will remain hidden when closing Ktrayshortcut;
 - The application icon is not correctly picked;
-- The context menu for those icons will present the same action that will actually close
-the ktrayshortcut application;
-- The application doesn't track when a captured window is closed and automatically removethe action from the shortcuts dialog;
 - The original window position may not be restored for some applications like gVim;
 
 # Missing features

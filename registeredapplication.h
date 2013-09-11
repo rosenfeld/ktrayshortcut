@@ -3,6 +3,7 @@
 
 #include "mainwindow.h"
 #include <QObject>
+#include <KSystemTrayIcon>
 #include <X11/Xlib.h>
 
 class RegisteredApplication : public QObject
@@ -10,7 +11,9 @@ class RegisteredApplication : public QObject
     Q_OBJECT
 public:
     explicit RegisteredApplication(MainWindow *mainWindow);
-    void grabWindow();
+    Window grabWindow();
+    void unregister();
+    KAction *action;
 
 signals:
 
@@ -23,6 +26,7 @@ private:
     Display *display;
     int screen;
     bool minimized;
+    KSystemTrayIcon *trayIcon;
 };
 
 #endif // REGISTEREDAPPLICATION_H

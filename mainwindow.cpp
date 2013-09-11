@@ -6,6 +6,8 @@
 #include <KActionCollection>
 #include <KSystemTrayIcon>
 
+std::map<Window, RegisteredApplication*> appByWindow;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -13,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     shortcutsEditor = new KShortcutsEditor(this, KShortcutsEditor::GlobalAction);
 
-    KAction *action = addCustomAction("main settings window");
+    actionCollection = new KActionCollection(this);
+    action = addCustomAction("main settings window");
     connect(action, SIGNAL(triggered()), SLOT(toggle()));
 
     ui->gridLayout->addWidget(shortcutsEditor);
@@ -25,18 +28,24 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    std::map<Window, RegisteredApplication*>::iterator iter;
+    shortcutsEditor->save();
+    for (iter = appByWindow.begin(); iter != appByWindow.end(); ++iter)
+        iter->second->unregister();
     delete shortcutsEditor;
+    delete actionCollection;
     delete ui;
 }
 
 KAction* MainWindow::addCustomAction(const QString &name) {
-    KActionCollection *ac = new KActionCollection(this);
-    KAction* action = ac->addAction(name);
+    shortcutsEditor->save();
+    shortcutsEditor->clearCollections();
+    KAction* action = actionCollection->addAction(name);
     action->setText(name);
     action->setGlobalShortcut(KShortcut(),
                               KAction::ActiveShortcut | KAction::DefaultShortcut,
                               KAction::NoAutoloading);
-    shortcutsEditor->addCollection(ac);
+    shortcutsEditor->addCollection(actionCollection);
     return action;
 }
 
@@ -46,5 +55,24 @@ void MainWindow::toggle() {
 }
 
 void MainWindow::findApplicationClick() {
-    (new RegisteredApplication(this))->grabWindow();
+    RegisteredApplication *app = new RegisteredApplication(this);
+    Window window = app->grabWindow();
+    appByWindow[window] = app;
+}
+
+void MainWindow::x11EventFilter(XEvent *event)
+{
+    if (event->type != DestroyNotify) return;
+    Window window = event->xclient.window;
+    RegisteredApplication *app = appByWindow[window];
+    if (!app) return;
+    shortcutsEditor->save();
+    app->unregister();
+    shortcutsEditor->clearCollections();
+    actionCollection->removeAction(app->action);
+    appByWindow.erase(window);
+    delete app;
+
+    shortcutsEditor->addCollection(actionCollection);
+    return;
 }

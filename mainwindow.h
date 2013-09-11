@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <KShortcutsEditor>
 #include <KAction>
+#include <KActionCollection>
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +18,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     KAction* addCustomAction(const QString &name);
+    void x11EventFilter(XEvent *event);
 
 public slots:
     void toggle();
@@ -25,6 +27,8 @@ public slots:
 private:
     Ui::MainWindow *ui;
     KShortcutsEditor *shortcutsEditor;
+    KActionCollection *actionCollection;
+    KAction *action;
 };
 
 #endif // MAINWINDOW_H
