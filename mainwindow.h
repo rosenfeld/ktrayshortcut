@@ -6,6 +6,8 @@
 #include <KAction>
 #include <KActionCollection>
 
+class RegisteredApplication; // forward declaration
+
 namespace Ui {
 class MainWindow;
 }
@@ -19,6 +21,7 @@ public:
     ~MainWindow();
     KAction* addCustomAction(const QString &name);
     void x11EventFilter(XEvent *event);
+    void removeApplication(RegisteredApplication *app);
 
 public slots:
     void toggle();

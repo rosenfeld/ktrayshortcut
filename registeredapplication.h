@@ -3,7 +3,7 @@
 
 #include "mainwindow.h"
 #include <QObject>
-#include <KSystemTrayIcon>
+#include <QSystemTrayIcon>
 #include <X11/Xlib.h>
 
 class RegisteredApplication : public QObject
@@ -11,22 +11,27 @@ class RegisteredApplication : public QObject
     Q_OBJECT
 public:
     explicit RegisteredApplication(MainWindow *mainWindow);
-    Window grabWindow();
+    virtual ~RegisteredApplication();
+    void grabWindow();
     void unregister();
     KAction *action;
+    Window window;
 
 signals:
 
 public slots:
+    void onTrayClick(QSystemTrayIcon::ActivationReason reason);
     void toggle();
+    void remove();
 
 private:
     MainWindow *mainWindow;
-    Window window;
     Display *display;
     int screen;
     bool minimized;
-    KSystemTrayIcon *trayIcon;
+    QSystemTrayIcon *trayIcon;
+    QMenu *contextMenu;
+    void createContextMenu();
 };
 
 #endif // REGISTEREDAPPLICATION_H

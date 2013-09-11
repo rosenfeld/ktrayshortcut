@@ -16,10 +16,10 @@ Here's a list of known bugs:
 
 - The application icon is not correctly picked;
 - The original window position may not be restored for some applications like gVim;
+- Stealing global shortcuts is not working;
 
 # Missing features
 
-- undocking an application
 - storing and restoring global shortcuts by application name
 
 # TODO

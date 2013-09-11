@@ -1,10 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
-
 #include "registeredapplication.h"
-#include <KActionCollection>
+
 #include <KSystemTrayIcon>
+
 
 std::map<Window, RegisteredApplication*> appByWindow;
 
@@ -56,23 +55,27 @@ void MainWindow::toggle() {
 
 void MainWindow::findApplicationClick() {
     RegisteredApplication *app = new RegisteredApplication(this);
-    Window window = app->grabWindow();
-    appByWindow[window] = app;
+    app->grabWindow();
+    appByWindow[app->window] = app;
 }
 
 void MainWindow::x11EventFilter(XEvent *event)
 {
     if (event->type != DestroyNotify) return;
     Window window = event->xclient.window;
+    if (!appByWindow.count(window)) return;
     RegisteredApplication *app = appByWindow[window];
-    if (!app) return;
+    removeApplication(app);
+    delete app;
+}
+
+void MainWindow::removeApplication(RegisteredApplication *app)
+{
     shortcutsEditor->save();
     app->unregister();
     shortcutsEditor->clearCollections();
     actionCollection->removeAction(app->action);
-    appByWindow.erase(window);
-    delete app;
+    appByWindow.erase(app->window);
 
     shortcutsEditor->addCollection(actionCollection);
-    return;
 }
