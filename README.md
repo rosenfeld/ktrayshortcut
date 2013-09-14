@@ -14,9 +14,9 @@ This is in a very early stage and is not suitable for production usage yet.
 
 Here's a list of known bugs:
 
-- The application icon is not correctly picked;
+- The application icon is not correctly picked when running from qtcreator (it doesn't
+seem to happen when running it directly);
 - The original window position may not be restored for some applications like gVim;
-- Stealing global shortcuts is not working;
 
 # Missing features
 
