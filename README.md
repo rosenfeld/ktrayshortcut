@@ -27,3 +27,7 @@ seem to happen when running it directly);
 There's a lot to organize in the code internals. I just wanted to get an idea on the
 minimum requirements to get it kind of working.
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/rosenfeld/ktrayshortcut/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
