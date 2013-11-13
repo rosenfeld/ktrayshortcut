@@ -12,6 +12,7 @@ RegisteredApplication::RegisteredApplication(MainWindow *mainWindow)
     this->mainWindow = mainWindow;
     display = QX11Info::display();
     screen = DefaultScreen(display);
+    root = RootWindow(display, screen);
     createContextMenu();
 }
 
@@ -28,7 +29,6 @@ void RegisteredApplication::createContextMenu()
 
 void RegisteredApplication::grabWindow()
 {
-    Window root = RootWindow(display, screen);
     Cursor cursor = XCreateFontCursor(display, XC_draped_box);
 
     XGrabPointer(display, root, false,
@@ -74,12 +74,27 @@ void RegisteredApplication::toggle()
 {
     if (minimized) {
         XMapRaised(display, window);
+        sendActiveWindowEvent();
         XSetInputFocus(display, window, RevertToParent, CurrentTime);
     } else {
         XIconifyWindow(display, window, screen);
         XWithdrawWindow(display, window, screen);
     }
     minimized = !minimized;
+}
+
+void RegisteredApplication::sendActiveWindowEvent() {
+    XEvent e;
+    memset(&e, 0, sizeof(XEvent));
+    e.xclient.window = window;
+    e.xclient.type = ClientMessage;
+    e.xclient.message_type = XInternAtom(display, "_NET_ACTIVE_WINDOW", true);
+    e.xclient.format = 32;
+    long data[2] = {2, CurrentTime};
+    memcpy((void *) &e.xclient.data, (void *) data, sizeof(data));
+    XSendEvent(display, root, false,
+               SubstructureNotifyMask | SubstructureRedirectMask, &e);
+    XSync(display, false);
 }
 
 void RegisteredApplication::unregister()

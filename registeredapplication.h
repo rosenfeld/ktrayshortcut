@@ -27,11 +27,13 @@ public slots:
 private:
     MainWindow *mainWindow;
     Display *display;
+    Window root;
     int screen;
     bool minimized;
     QSystemTrayIcon *trayIcon;
     QMenu *contextMenu;
     void createContextMenu();
+    void sendActiveWindowEvent();
 };
 
 #endif // REGISTEREDAPPLICATION_H

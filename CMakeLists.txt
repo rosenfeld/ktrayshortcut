@@ -25,7 +25,7 @@ install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/ktrayshortcut DESTINATION bin)
 
 SET(MAJOR_VERSION "0")
 SET(MINOR_VERSION "1")
-SET(PATCH_VERSION "0")
+SET(PATCH_VERSION "1")
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
 INCLUDE(InstallRequiredSystemLibraries)
@@ -33,8 +33,8 @@ INCLUDE(InstallRequiredSystemLibraries)
 SET(CPACK_SET_DESTDIR "on")
 SET(CPACK_PACKAGING_INSTALL_PREFIX "/tmp")
 SET(CPACK_GENERATOR "DEB")
- 
-SET(CPACK_PACKAGE_DESCRIPTION "kate service menu for folders")
+
+SET(CPACK_PACKAGE_DESCRIPTION "Send any window to the system tray and assign them global shortcuts.")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Send any window to the system tray and assign them global shortcuts.")
 SET(CPACK_PACKAGE_VENDOR "rosenfeld")
 SET(CPACK_PACKAGE_CONTACT "rr.rosas@gmail.com")

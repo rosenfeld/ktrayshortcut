@@ -22,6 +22,14 @@ seem to happen when running it directly);
 
 - storing and restoring global shortcuts by application name
 
+# Building a deb package
+
+    mkdir build
+    cd build
+    cmake ..
+    make
+    cpack ..
+
 # TODO
 
 There's a lot to organize in the code internals. I just wanted to get an idea on the
