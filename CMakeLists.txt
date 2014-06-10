@@ -25,7 +25,7 @@ install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/ktrayshortcut DESTINATION bin)
 
 SET(MAJOR_VERSION "0")
 SET(MINOR_VERSION "1")
-SET(PATCH_VERSION "1")
+SET(PATCH_VERSION "2")
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
 INCLUDE(InstallRequiredSystemLibraries)
