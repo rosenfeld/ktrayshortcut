@@ -5,6 +5,7 @@
 #include <X11/Xmu/WinUtil.h>
 #include <X11/xpm.h>
 #include <QMenu>
+#include <KIcon>
 
 RegisteredApplication::RegisteredApplication(MainWindow *mainWindow)
 {
@@ -48,11 +49,27 @@ void RegisteredApplication::grabWindow()
 
     char **window_icon = 0;
     XWMHints *wm_hints = XGetWMHints(display, window);
-    XpmCreateDataFromPixmap(display, &window_icon, wm_hints->icon_pixmap,
-                            wm_hints->icon_mask, 0);
-    QPixmap appIcon = QPixmap(const_cast<const char **> (window_icon));
-    XpmFree(window_icon);
-    trayIcon = new QSystemTrayIcon(QIcon(appIcon));
+
+    if (wm_hints != 0) {
+        if (!(wm_hints->flags & IconMaskHint))
+            wm_hints->icon_mask = None;
+        if ((wm_hints->flags & IconPixmapHint) && wm_hints->icon_pixmap) {
+            XpmCreateDataFromPixmap(display, &window_icon, wm_hints->icon_pixmap,
+                                    wm_hints->icon_mask, 0);
+        }
+        XpmCreateDataFromPixmap(display, &window_icon, wm_hints->icon_pixmap,
+                                wm_hints->icon_mask, 0);
+        XFree(wm_hints);
+    }
+
+    QIcon icon;
+    if (window_icon) {
+        QPixmap appIcon(const_cast<const char **> (window_icon));
+        icon = QIcon(appIcon);
+        XpmFree(window_icon);
+    } else icon = KIcon("xorg");
+
+    trayIcon = new QSystemTrayIcon(icon);
     trayIcon->setContextMenu(contextMenu);
     trayIcon->show();
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
